@@ -1,0 +1,6 @@
+Arduino Uno
+Servo: SG90
+Thermal sensor: DS18B20
+LCD: LCD1602
+Potentiometer: 10K
+Resistor: 5.1K
