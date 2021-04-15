@@ -1,0 +1,31 @@
+// Common
+Arduino GND -> Common GND
+Arduino 3V -> Common PWR
+
+// DS18B20
+GND -> DS18B20 GND
+PWR -> DS18B20 GND
+Arduino 2 -> DS18B20 data
+PWR -> Resistor 5.1K -> DS18B20 data (Resistor supposed to be 4.7K)
+
+// Servo:
+PWR -> Servo PWR
+GND -> Servo GND
+Arduino 3 -> Servo pulse
+
+// LCD +  Potentiometer (10k)
+Potentiometer IN1 -> GND
+Potentiometer IN2 -> PWR
+Potentiometer OUT -> LCD VO
+
+GND -> LCD VSS
+GND -> LCD RW
+GND -> LCD K
+PWR -> LCD VDD
+PWR -> LCD A
+Arduino 7 -> LCD RS
+Arduino 8 -> LCD E
+Arduino 9 -> LCD D4
+Arduino 10 -> LCD D5
+Arduino 11 -> LCD D6
+Arduino 12 -> LCD D7
