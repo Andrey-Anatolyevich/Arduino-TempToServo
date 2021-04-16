@@ -30,15 +30,18 @@ void setup()
   // Onboard LED
   pinMode(LED_BUILTIN, OUTPUT);
 
-  // Servo
-  myservo.write(servoAngle);
-  myservo.attach(3);
+  // DS18B20
+  sensors.begin();
 
   // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
 
-  // DS18B20
-  sensors.begin();
+  // Prep servo angle
+  tempCurrent = sensors.getTempCByIndex(0);
+  adjustServoToTemperature(tempCurrent);
+  
+  // Attach servo
+  myservo.attach(3);
 
   // Print a message to the LCD.
   write("Hi", "there!");
