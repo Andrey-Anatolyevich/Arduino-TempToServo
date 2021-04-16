@@ -1,34 +1,37 @@
 #include <Servo.h>
 #include <LiquidCrystal.h>
-#include <OneWire.h> 
+#include <OneWire.h>
 #include <DallasTemperature.h>
 
 #define ONE_WIRE_BUS 2
 #define SERIAL_SPEED 9600
 
 bool runServo = true;
-int angleMin = 0;
-int angleMax = 180;
+int angleBelowMin = 0;
+int angleMin = 60;
+int angleMax = 120;
+int angleAboveMax = 180;
 int tempMin = 23;
 int tempMax = 30;
 float tempCurrent = 0;
-int servoAngle = angleMin;
+int servoAngle = angleBelowMin;
 int oneLoopLastDelaySeconds = 5;
 
 Servo myservo;
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
-OneWire oneWire(ONE_WIRE_BUS); 
+OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-void setup(){
+void setup()
+{
   // Setup serial output
   Serial.begin(SERIAL_SPEED);
 
   // Onboard LED
   pinMode(LED_BUILTIN, OUTPUT);
-  
+
   // Servo
-  myservo.write(angleMin);
+  myservo.write(servoAngle);
   myservo.attach(3);
 
   // set up the LCD's number of columns and rows:
@@ -39,9 +42,10 @@ void setup(){
 
   // Print a message to the LCD.
   write("Hi", "there!");
-} 
+}
 
-void loop(){
+void loop()
+{
   Serial.println();
   delay(500);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -55,19 +59,21 @@ void loop(){
 
 void adjustServoToTemperature(float tempC)
 {
-  servoAngle = map(tempC * 10, tempMin * 10, tempMax * 10, angleMin * 10, angleMax * 10) / 10;
-  if(tempC < tempMin)
-    servoAngle = angleMin;
+  if (!runServo)
+    return;
 
-  if(tempC > tempMax)
-    servoAngle = angleMax;
+  if (tempC < tempMin)
+    servoAngle = angleBelowMin;
+  else if (tempC > tempMax)
+    servoAngle = angleAboveMax;
+  else
+    servoAngle = map(tempC * 10, tempMin * 10, tempMax * 10, angleMin * 10, angleMax * 10) / 10;
 
-  if(runServo){
-    myservo.write(servoAngle);
-  }
+  myservo.write(servoAngle);
 }
 
-void write(String line1, String line2){
+void write(String line1, String line2)
+{
   Serial.println("Line1: " + line1);
   Serial.println("Line2: " + line2);
 
@@ -80,7 +86,8 @@ void write(String line1, String line2){
   lcd.print(line2);
 }
 
-void StreamVariables(){
+void StreamVariables()
+{
   Serial.println("tempCurrent: " + String(tempCurrent));
   Serial.println("tempMin: " + String(tempMin));
   Serial.println("tempMax: " + String(tempMax));
